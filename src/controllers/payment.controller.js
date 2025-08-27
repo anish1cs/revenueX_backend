@@ -191,8 +191,7 @@ const sendInvoiceMail = async (customer, bill, invoicePath) => {
       user: process.env.MAIL_USER,
       pass: process.env.MAIL_PASS,
     },
-    port: 465,
-    secure: true
+    port: 587,
   });
 
   const mailOptions = {
@@ -267,6 +266,103 @@ const sendInvoiceMail = async (customer, bill, invoicePath) => {
   await transporter.sendMail(mailOptions);
 };
 
+// ====================
+// 🔹 Send Payment Request Mail
+// ====================
+const sendPaymentRequest = asyncHandler(async (req, res) => {
+  try {
+    const { billId } = req.params;
+
+    // Find Bill
+    const bill = await Bill.findOne({ billId });
+    if (!bill) throw new ApiError(404, "Bill not found");
+
+    // Find Customer
+    const customer = await Customer.findOne({ _id: bill.customerId });
+    if (!customer) throw new ApiError(404, "Customer not found");
+
+    // Format Dates
+    const dueDate = bill.dueDate
+      ? new Intl.DateTimeFormat("en-GB", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }).format(new Date(bill.dueDate))
+      : "N/A";
+
+    // Setup mail transporter
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
+      },
+      port: 587,
+    });
+
+    const mailOptions = {
+      from: `"OdishaTech Billing Team" <${process.env.MAIL_USER}>`,
+      to: `${customer.email},kumaranish1958@gmail.com`,
+      subject: `OdishaTech | Payment Request - ${bill.billId} (${bill.month})`,
+      html: `
+        <div style="font-family: Arial, sans-serif; padding: 20px; background:#f9f9f9;">
+          <div style="max-width: 650px; margin:auto; background:#ffffff; border:1px solid #e1e1e1; border-radius:8px; padding:30px;">
+            
+            <!-- Header -->
+            <h2 style="color:#d35400; margin-top:0;">Payment Request Reminder</h2>
+            
+            <p style="font-size:15px; line-height:1.6;">
+              Dear <strong>${customer.name}</strong>,  
+              This is a friendly reminder regarding your pending payment for the month of <strong>${bill.month}</strong>.
+            </p>
+
+            <table style="border-collapse: collapse; width: 100%; margin: 20px 0; font-size: 14px;">
+              <tr>
+                <td style="padding: 10px; border: 1px solid #ddd; background: #fef5e7;"><strong>Invoice ID</strong></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">${bill.billId}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px; border: 1px solid #ddd; background: #fef5e7;"><strong>Amount Due</strong></td>
+                <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">₹${bill.amount}</td>
+              </tr>
+              <tr>
+                <td style="padding: 10px; border: 1px solid #ddd; background: #fef5e7;"><strong>Due Date</strong></td>
+                <td style="padding: 10px; border: 1px solid #ddd;">${dueDate}</td>
+              </tr>
+            </table>
+
+            <p style="margin-top:20px; font-size:14px; line-height:1.6;">
+              We kindly request you to complete the payment before the due date to avoid late fees.  
+              If you have already made the payment, please ignore this message.
+            </p>
+
+            <p style="margin-top:40px; font-size:14px;">
+              Best Regards,<br>
+              <strong>OTSS Billing Team</strong>
+            </p>
+
+            <hr style="margin:30px 0;">
+            <p style="font-size:11px; color:#777; line-height:1.5;">
+              This is an automated reminder from OdishaTech Software Solutions. Please do not reply to this email.  
+              <br>© ${new Date().getFullYear()} OTSS Pvt. Ltd. All rights reserved.
+            </p>
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+
+    return res
+      .status(200)
+      .json(new ApiResponse(200, {}, "Payment request mail sent successfully"));
+  } catch (error) {
+    console.error("Mail error:", error);
+    throw new ApiError(500, "Failed to send payment request");
+  }
+});
+
+
 
 // ✅ Get All Payments
 const getPayments = asyncHandler(async (req, res) => {
@@ -301,4 +397,5 @@ const deletePayment = asyncHandler(async (req, res) => {
     .json(new ApiResponse(200, {}, "Payment deleted successfully"));
 });
 
-export { createPayment, getPayments, getPaymentById, deletePayment, getPaymentByBillId };
+export { createPayment, getPayments, getPaymentById, deletePayment, getPaymentByBillId, sendPaymentRequest };
+

@@ -40,8 +40,10 @@ const getCustomerById = asyncHandler(async (req, res) => {
 
 // ✅ Update Customer
 const updateCustomer = asyncHandler(async (req, res) => {
+
+  
   const customer = await Customer.findOneAndUpdate(
-    { customerId: req.params.id },
+    { _id: req.params.id },
     req.body,
     { new: true }
   );
@@ -53,7 +55,7 @@ const updateCustomer = asyncHandler(async (req, res) => {
 
 // ✅ Delete Customer
 const deleteCustomer = asyncHandler(async (req, res) => {
-  const customer = await Customer.findOneAndDelete({ customerId: req.params.id });
+  const customer = await Customer.findOneAndDelete({ _id: req.params.id });
   if (!customer) throw new ApiError(404, "Customer not found");
   return res
     .status(200)

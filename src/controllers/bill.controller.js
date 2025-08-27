@@ -29,7 +29,12 @@ const generateBill =  async () => {
     console.log("🔄 Auto Bill Generation Started...");
 
     const customers = await Customer.find({ status: "active" });
-    const month = new Date().toLocaleString("default", { month: "short", year: "numeric" });
+const date = new Date();
+date.setMonth(date.getMonth() - 1); // shift back one month
+const month = date.toLocaleString("default", { month: "short", year: "numeric" });
+
+
+
     const generatedDate = new Date().toISOString().split("T")[0];
     const dueDate = new Date();
     dueDate.setDate(dueDate.getDate() + 10); // due in 10 days

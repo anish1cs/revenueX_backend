@@ -5,6 +5,7 @@ import {
   getPaymentById,
   getPaymentByBillId,
   deletePayment,
+  sendPaymentRequest
 
 } from "../controllers/payment.controller.js";
 
@@ -21,6 +22,8 @@ router.route("/all").get( getPayments);
 router.route("/:id").get( getPaymentById);
 // 🔹 Get single payment by billID
 router.route("/bills/:id").get( getPaymentByBillId);
+router.post("/bills/:billId/send-request", sendPaymentRequest);
+
 
 // 🔹 Delete a payment by ID
 router.route("/:id").delete( deletePayment);
