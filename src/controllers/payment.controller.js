@@ -126,8 +126,8 @@ const generateInvoicePDF = (customer, bill, payment, invoicePath) => {
     doc.text(customer.address, 220, topY + 30);
 
     doc.text("Sold by", 400, topY, { underline: true });
-    doc.text("OdishaTech Software Solutions Pvt. Ltd", 400, topY + 15);
-    doc.text("Corporate Office, Bhubaneswar", 400, topY + 30);
+    doc.text("FlashRent Commercial", 400, topY + 15);
+    doc.text("Haldipali,Bargarh", 400, topY + 30);
 
 
     // ===== ORDER INFO =====
@@ -170,8 +170,8 @@ const generateInvoicePDF = (customer, bill, payment, invoicePath) => {
       "This is a computer-generated invoice and does not require a signature.",
       { align: "center" }
     );
-    doc.text("For queries, contact billing@company.com", { align: "center" });
-    doc.text("© 2025 OdishaTech Software Solutions Pvt. Ltd | All Rights Reserved", { align: "center" });
+    doc.text("For queries, contact flashrent.hp@gmail.com", { align: "center" });
+    doc.text(`© ${new Date().getFullYear()} FlashRent Commercial | All Rights Reserved`, { align: "center" });
 
     doc.end();
     stream.on("finish", () => resolve(true));
@@ -195,19 +195,19 @@ const sendInvoiceMail = async (customer, bill, invoicePath) => {
   });
 
   const mailOptions = {
-    from: `"OdishaTech Billing Team" <${process.env.MAIL_USER}>`,
+    from: `"FlashRent Billing Team" <${process.env.MAIL_USER}>`,
     to: `${customer.email},kumaranish1958@gmail.com`,
-    subject: `OdishaTech | Invoice Confirmation - ${bill.billId} (${bill.month})`,
+    subject: `FlashRent | Invoice Confirmation - ${bill.billId} (${bill.month})`,
     html: `
     <div style="font-family: 'Segoe UI', Arial, sans-serif; color: #2c3e50; padding: 20px; background: #f9f9f9;">
       <div style="max-width: 650px; margin: auto; background: #ffffff; border: 1px solid #e1e1e1; border-radius: 8px; padding: 30px;">
         
         <!-- Header -->
         <div style="border-bottom: 2px solid #004080; padding-bottom: 10px; margin-bottom: 20px;">
-          <h2 style="color: #004080; margin: 0;">OdishaTech Software Solutions</h2>
-          <p style="font-size: 13px; margin: 2px 0; color: #555;">infocity, Patia,Bhubanewar, India</p>
+          <h2 style="color: #004080; margin: 0;">FlashRent Commercial</h2>
+          <p style="font-size: 13px; margin: 2px 0; color: #555;">Haldipali,Bargarh,Odisha, India</p>
           <p style="font-size: 13px; margin: 2px 0; color: #555;">
-            <a href="https://otss.netlify.app" target="_blank" style="color: #004080; text-decoration: none;">www.otss.com</a>
+            <a href="https://revenuex.netlify.app" target="_blank" style="color: #004080; text-decoration: none;">www.revenuex.netlify.app</a>
           </p>
         </div>
 
@@ -237,19 +237,19 @@ const sendInvoiceMail = async (customer, bill, invoicePath) => {
         <!-- Support Info -->
         <p style="margin-top: 20px; font-size: 14px; line-height: 1.6;">
           Should you have any queries, please reach out to our support team at  
-          <a href="mailto:support@otss.com" style="color: #004080; text-decoration: none;">support@otss.com</a>.
+          <a href="mailto:flashrent.hp@gmail.com" style="color: #004080; text-decoration: none;">flashrent.hp@gmail.com</a>.
         </p>
 
         <!-- Footer -->
         <p style="margin-top: 40px; font-size: 14px; color: #333;">
           Best Regards,<br>
-          <strong>OTSS Billing Team</strong>
+          <strong>FlashRent Billing Team</strong>
         </p>
 
         <hr style="margin: 30px 0;">
         <p style="font-size: 11px; color: #777; line-height: 1.5;">
-          This is an automated message from OdishaTech Softare Solutions. Please do not reply to this email.  
-          <br>© ${new Date().getFullYear()}  OdishaTech Softare Solution Private Limited. All rights reserved.
+          This is an automated message from FlashRent Commercial. Please do not reply to this email.  
+          <br>© ${new Date().getFullYear()}  FlashRent Commercial. All rights reserved.
         </p>
       </div>
     </div>
@@ -301,9 +301,9 @@ const sendPaymentRequest = asyncHandler(async (req, res) => {
     });
 
     const mailOptions = {
-      from: `"OdishaTech Billing Team" <${process.env.MAIL_USER}>`,
+      from: `"FlashRent Billing Team" <${process.env.MAIL_USER}>`,
       to: `${customer.email},kumaranish1958@gmail.com`,
-      subject: `OdishaTech | Payment Request - ${bill.billId} (${bill.month})`,
+      subject: `FlashRent | Payment Request - ${bill.billId} (${bill.month})`,
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px; background:#f9f9f9;">
           <div style="max-width: 650px; margin:auto; background:#ffffff; border:1px solid #e1e1e1; border-radius:8px; padding:30px;">
@@ -338,13 +338,13 @@ const sendPaymentRequest = asyncHandler(async (req, res) => {
 
             <p style="margin-top:40px; font-size:14px;">
               Best Regards,<br>
-              <strong>OTSS Billing Team</strong>
+              <strong>FlahRent Billing Team</strong>
             </p>
 
             <hr style="margin:30px 0;">
             <p style="font-size:11px; color:#777; line-height:1.5;">
-              This is an automated reminder from OdishaTech Software Solutions. Please do not reply to this email.  
-              <br>© ${new Date().getFullYear()} OTSS Pvt. Ltd. All rights reserved.
+              This is an automated reminder from FlashRent Commercial. Please do not reply to this email.  
+              <br>© ${new Date().getFullYear()} FlashRent Commercial. All rights reserved.
             </p>
           </div>
         </div>
